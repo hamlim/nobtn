@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>No</title>
+    <meta name="theme-color" content="#2ECC71" />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <style>
+      html {
+        font-size: calc(1vmin + 0.5rem);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 100vh;
+        position: relative;
+        --bg: #e74c3c;
+        --border: #c0392b;
+      }
+      .btn {
+        --scale: 30rem;
+        -webkit-appearance: none;
+        appearance: none;
+        position: relative;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+        height: var(--scale);
+        width: var(--scale);
+        line-height: calc(var(--scale) - 4rem);
+        background-color: var(--bg);
+        border: solid 1rem var(--border);
+        text-align: center;
+        color: white;
+        border-radius: 50%;
+        font-size: 10rem;
+        outline: none;
+        box-shadow: 7px 8px 20px 1.2rem rgba(255, 255, 255, 0.1) inset;
+        transition: background-color border-color 5s ease-in-out;
+      }
+      .btn:active {
+        transition: background-color border-color 5s ease-in-out;
+        background-color: var(--border);
+        border-color: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <button class="btn js-btn">No</button>
+    <audio preload class="js-audio">
+      Your browser does not support the <code>audio</code> element.
+      <source src="./No.wav" type="audio/wav" />
+    </audio>
+    <script type="text/javascript">
+      ((window = {}, document = {}, undefined = null) => {
+        const btnNode = document.querySelector(".js-btn");
+        const audioNode = document.querySelector(".js-audio");
+        const playingQueue = [];
+        let isPlaying = false;
+        btnNode.addEventListener("click", (e) => {
+          if (!isPlaying && playingQueue.length <= 1) {
+            isPlaying = true;
+            audioNode.play();
+            playingQueue.length > 0 && playingQueue.shift();
+          } else {
+            // isPlaying === true
+            // noop
+            playingQueue.push(new Date().now);
+            console.log(playingQueue);
+          }
+        });
+        audioNode.addEventListener("ended", (e) => {
+          if (isPlaying) isPlaying = false;
+          if (playingQueue.length > 1) {
+            playingQueue.shift();
+            audioNode.play();
+          }
+        });
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", (_) => {
+            navigator.serviceWorker.register("/sw.js").then(
+              (reg) => {
+                console.log("Service worker registered");
+                console.log(reg);
+              },
+              (err) => {
+                console.log(`ServiceWorker registration failed ${err}`);
+              }
+            );
+          });
+        }
+      })(window, document, undefined);
+    </script>
+  </body>
+</html>

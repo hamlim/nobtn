@@ -1,0 +1,12 @@
+{
+  "name": "nobtn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "^19.2.0"
+  },
+  "scripts": {
+    "deploy": "vercel"
+  }
+}
